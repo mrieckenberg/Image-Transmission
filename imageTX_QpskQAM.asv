@@ -72,8 +72,9 @@ BER_qpsk = biterr(input, l_qpsk) / len;
 BER_16qam = biterr(input, l_16qam) / len;
 BER_64qam = biterr(input, l_64qam) / len;
 
-disp(BER_qpsk);
-disp(BER_16qam);
+% fprintf("BER for QPSK: ",BER_qpsk);
+fprintf("BER for QPSK: ", BER_qpsk);
+fprintf(,BER_16qam);
 disp(BER_64qam);
 
 
@@ -84,15 +85,7 @@ im_64qam=reshape(dec_64qam(1:N),size(in,1),size(in,2),size(in,3));
 figure;
 subplot(131);
 imshow(im_qpsk);title('QPSK');
-xlabel("BER: "+BER_qpsk);
-
 subplot(132);
-imshow(im_16qam);title('16-QAM');
-xlabel("BER: "+BER_16qam);
+imshow(im_16qam);title('16QAM');
 subplot(133);
-imshow(im_64qam);title('64-QAM');
-xlabel("BER: "+BER_64qam);
-sgtitle('Received Images'); % Super title for the whole figure
-
-
-
+imshow(im_64qam);title('64QAM');
