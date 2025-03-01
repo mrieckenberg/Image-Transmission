@@ -72,9 +72,8 @@ BER_qpsk = biterr(input, l_qpsk) / len;
 BER_16qam = biterr(input, l_16qam) / len;
 BER_64qam = biterr(input, l_64qam) / len;
 
-% fprintf("BER for QPSK: ",BER_qpsk);
-fprintf("BER for QPSK: ", BER_qpsk);
-fprintf(,BER_16qam);
+disp(BER_qpsk);
+disp(BER_16qam);
 disp(BER_64qam);
 
 
@@ -82,10 +81,41 @@ disp(BER_64qam);
 im_qpsk=reshape(dec_qpsk(1:N),size(in,1),size(in,2),size(in,3));
 im_16qam=reshape(dec_16qam(1:N),size(in,1),size(in,2),size(in,3));
 im_64qam=reshape(dec_64qam(1:N),size(in,1),size(in,2),size(in,3));
+% figure;
+% subplot(131);
+% imshow(im_qpsk);title('QPSK');
+% xlabel("BER: "+BER_qpsk);
+% 
+% subplot(132);
+% imshow(im_16qam);title('16-QAM');
+% xlabel("BER: "+BER_16qam);
+% subplot(133);
+% imshow(im_64qam);title('64-QAM');
+% xlabel("BER: "+BER_64qam);
+% sgtitle('Received Images'); % Super title for the whole figure
+
 figure;
-subplot(131);
-imshow(im_qpsk);title('QPSK');
-subplot(132);
-imshow(im_16qam);title('16QAM');
-subplot(133);
-imshow(im_64qam);title('64QAM');
+tiledlayout(1,3,'TileSpacing','compact','Padding','compact'); % Better spacing
+
+% QPSK Image
+nexttile;
+imshow(im_qpsk);
+title('QPSK');
+text(size(im_qpsk,2)/2, size(im_qpsk,1) + 250, sprintf("BER: %.4f\nAdditional Info: XYZ", BER_qpsk), ...
+    'HorizontalAlignment', 'center', 'FontSize', 12, 'Color', 'k');
+
+% 16-QAM Image
+nexttile;
+imshow(im_16qam);
+title('16-QAM');
+text(size(im_16qam,2)/2, size(im_16qam,1) + 250, sprintf("BER: %.4f\nAdditional Info: XYZ", BER_16qam), ...
+    'HorizontalAlignment', 'center', 'FontSize', 12, 'Color', 'k');
+
+% 64-QAM Image
+nexttile;
+imshow(im_64qam);
+title('64-QAM');
+text(size(im_64qam,2)/2, size(im_64qam,1) + 250, sprintf("BER: %.4f\nAdditional Info: XYZ", BER_64qam), ...
+    'HorizontalAlignment', 'center', 'FontSize', 12, 'Color', 'k');
+
+sgtitle('Received Images'); % Super title
