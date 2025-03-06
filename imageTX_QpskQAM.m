@@ -37,7 +37,7 @@ y_qpsk = h_qpsk(input);
 y_16qam = h_16qam(input);
 y_64qam = h_64qam(input);
 
-%%%%%%%%%%%%%% CHANNEL 
+%%%%%%%%%%%%%%   CHANNEL 
 
 % Take Frequency-Domain signals (modulated symbols) and convert them to time-domain using the
 % IFFT creating time-domain signals for transmission over the channel
@@ -57,7 +57,7 @@ tx_qpsk=awgn(ifft_out_qpsk_rayleigh,SNR,'measured');
 tx_16qam=awgn(ifft_out_16qam_rayleigh,SNR,'measured');
 tx_64qam=awgn(ifft_out_64qam_rayleigh,SNR,'measured');
 
-%%%%%%%%%%%%    RECEIVER  %%%%%%%%%%%%%%
+%%%%%%%%%%%%    RECEIVER
 
 % Received signal is processed by applying the FFT to convert back to frequency domain 
 k_qpsk=fft(tx_qpsk);
@@ -95,7 +95,7 @@ disp(BER_16qam);
 disp(BER_64qam);
 
 
-%%%% RECIEVED IMAGE DATA  %%%%%%%
+%%%%%%% RECIEVED IMAGE DATA
 im_qpsk=reshape(dec_qpsk(1:N),size(in,1),size(in,2),size(in,3));
 im_16qam=reshape(dec_16qam(1:N),size(in,1),size(in,2),size(in,3));
 im_64qam=reshape(dec_64qam(1:N),size(in,1),size(in,2),size(in,3));
