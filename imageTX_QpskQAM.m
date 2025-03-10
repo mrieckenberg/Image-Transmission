@@ -24,7 +24,7 @@ g_64qam = @(input) qamdemod(input, 64, 'outputtype', 'bit');  % 64-QAM
 %%%%%%%% TRANSMITTER   
 
 % Prepare image for transmission by converting it into a binary sequence
-in=imread('24_bit.png');  
+in=imread('leaf.png');  
 N=numel(in);
 in2=reshape(in,N,1);
 bin=de2bi(in2,'left-msb');
