@@ -3,18 +3,25 @@ close all;
 
 SNR_list = [-30:30];
 for i = 1:length(SNR_list)
-    disp(i)
-    %Anonymous functions used to modulate the input signal with given modulation scheme  
+    % Create a Constellation Diagram objects
+    % constellationDiagram1 = comm.ConstellationDiagram('ShowGrid', true, 'Name', 'BPSK Constellation - Ideal');
+    % constellationDiagram2 = comm.ConstellationDiagram('ShowGrid', true, 'Name', 'BPSK Constellation - Noisy');
+    
+    % Anonymous functions used to modulate the input signal with given modulation scheme  
     h_bpsk = @(input) pskmod(input, 2, 0, 'inputtype', 'bit');  % BPSK
     h_qpsk = @(input) pskmod(input, 4, pi/4, 'inputtype', 'bit');  % QPSK
     h_16qam = @(input) qammod(input, 16, 'inputtype', 'bit');  % 16-QAM
     h_64qam = @(input) qammod(input, 64, 'inputtype', 'bit');  % 64-QAM
+    h_256qam = @(input) qammod(input, 256, 'inputtype', 'bit');  % 256-QAM
     
-    %Anonymous functions used to demodulate the output signal with given modulation scheme  
+    % Anonymous functions used to demodulate the output signal with given modulation scheme  
     g_bpsk = @(input) pskdemod(input, 2, 0, 'outputtype', 'bit');  % BPSK
     g_qpsk = @(input) pskdemod(input, 4, pi/4, 'outputtype', 'bit');  % QPSK
     g_16qam = @(input) qamdemod(input, 16, 'outputtype', 'bit');  % 16-QAM
     g_64qam = @(input) qamdemod(input, 64, 'outputtype', 'bit');  % 64-QAM
+    g_256qam = @(input) qamdemod(input, 256, 'outputtype', 'bit');  % 256-QAM
+    
+ 
     
     %%%%%%%% TRANSMITTER   
     
@@ -38,6 +45,10 @@ for i = 1:length(SNR_list)
     y_qpsk = h_qpsk(input);
     y_16qam = h_16qam(input);
     y_64qam = h_64qam(input);
+    y_256qam = h_256qam(input);
+    % Plot the constellation before transmission (Ideal Constellation)
+    % constellationDiagram1(y_16qam);  % Ideal constellation without noise
+    %imshow
     
     %%%%%%%%%%%%%% CHANNEL 
     
@@ -46,6 +57,7 @@ for i = 1:length(SNR_list)
     ifft_out_qpsk=ifft(y_qpsk);   
     ifft_out_16qam=ifft(y_16qam);
     ifft_out_64qam=ifft(y_64qam);
+    ifft_out_256qam=ifft(y_256qam);
     
     % Add AWGN to Signals
     SNR=SNR_list(i);          % SNR in dB
@@ -53,6 +65,7 @@ for i = 1:length(SNR_list)
     tx_qpsk = awgn(ifft_out_qpsk,SNR,'measured');
     tx_16qam = awgn(ifft_out_16qam,SNR,'measured');
     tx_64qam = awgn(ifft_out_64qam,SNR,'measured');
+    tx_256qam = awgn(ifft_out_256qam,SNR,'measured');
     
     %%%%%%%%%%%%    RECEIVER
     
@@ -61,44 +74,54 @@ for i = 1:length(SNR_list)
     k_qpsk=fft(tx_qpsk);
     k_16qam=fft(tx_16qam);
     k_64qam=fft(tx_64qam);
+    k_256qam=fft(tx_256qam);
+    
+    % constellationDiagram2(k_256qam);  % Noisy constellation
     
     % Received singal is demodulated
     l_bpsk = pskdemod(k_bpsk, 2, 0, 'outputtype', 'bit'); 
     l_qpsk = pskdemod(k_qpsk, 4, pi/4, 'outputtype', 'bit');
     l_16qam = qamdemod(k_16qam, 16, 'outputtype', 'bit'); 
     l_64qam = qamdemod(k_64qam, 64, 'outputtype', 'bit');
+    l_256qam = qamdemod(k_256qam, 256, 'outputtype', 'bit');
     
     output_bpsk=uint8(l_bpsk);
     output_qpsk=uint8(l_qpsk);
     output_16qam=uint8(l_16qam);
     output_64qam=uint8(l_64qam);
+    output_256qam=uint8(l_256qam);
     
     output_bpsk=output_bpsk(1:len);
     output_qpsk=output_qpsk(1:len);
     output_16qam=output_16qam(1:len);
     output_64qam=output_64qam(1:len);
+    output_256qam=output_256qam(1:len);
     
     b_bpsk = reshape(output_bpsk, 8, N)';  % Reshape BPSK output into 8-bit blocks
     b1=reshape(output_qpsk,8,N)';
     b2=reshape(output_16qam,8,N)';
     b3=reshape(output_64qam,8,N)';
+    b4=reshape(output_256qam,8,N);
     
     dec_bpsk = bi2de(b_bpsk,'left-msb');
     dec_qpsk = bi2de(b1,'left-msb');
     dec_16qam = bi2de(b2,'left-msb');
     dec_64qam = bi2de(b3,'left-msb');
+    dec_256qam = bi2de(b4,'left-msb');
     
     % Compute the bit error rate
     BER_bpsk = biterr(input, l_bpsk) / len;
     BER_qpsk = biterr(input, l_qpsk) / len;
     BER_16qam = biterr(input, l_16qam) / len;
     BER_64qam = biterr(input, l_64qam) / len;
+    BER_256qam = biterr(input, l_256qam) / len;
     
     % Display the BER for each modulation scheme
-    disp(BER_bpsk);
+    % disp(BER_bpsk);
     % disp(BER_qpsk);
     % disp(BER_16qam);
     % disp(BER_64qam);
+    disp(BER_256qam);
     
     %%%%%%%%% RECIEVED IMAGE DATA  
     
@@ -106,6 +129,7 @@ for i = 1:length(SNR_list)
     % im_qpsk = reshape(dec_qpsk(1:N),size(in,1),size(in,2),size(in,3));
     % im_16qam = reshape(dec_16qam(1:N),size(in,1),size(in,2),size(in,3));
     % im_64qam = reshape(dec_64qam(1:N),size(in,1),size(in,2),size(in,3));
+    % im_256qam = reshape(dec_64qam(1:N),size(in,1),size(in,2),size(in,3));
     
     % figure;
     % subplot(1,4,1);
@@ -127,8 +151,12 @@ for i = 1:length(SNR_list)
     % imshow(im_64qam);
     % title('64-QAM');
     % xlabel(sprintf("BER: %.2e", BER_64qam));
-    % 
+    
+    % subplot(1,4,4);
+    % imshow(im_256qam);
+    % title('256-QAM');
+    % xlabel(sprintf("BER: %.2e", BER_256qam));
+    
     % sgtitle('Received Images');
     % set(gcf, 'Position', [100, 100, 2400, 600]); % Adjust figure size to fit 4 images
 end
-
