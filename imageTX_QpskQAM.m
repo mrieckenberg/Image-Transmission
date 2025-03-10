@@ -2,22 +2,29 @@ clc;
 clear;
 close all;
 
-%Anonymous functions used to modulate the input signal with given modulation scheme  
+% Create a Constellation Diagram objects
+constellationDiagram1 = comm.ConstellationDiagram('ShowGrid', true, 'Name', 'BPSK Constellation - Ideal');
+constellationDiagram2 = comm.ConstellationDiagram('ShowGrid', true, 'Name', 'BPSK Constellation - Noisy');
+
+% Anonymous functions used to modulate the input signal with given modulation scheme  
 h_bpsk = @(input) pskmod(input, 2, 0, 'inputtype', 'bit');  % BPSK
 h_qpsk = @(input) pskmod(input, 4, pi/4, 'inputtype', 'bit');  % QPSK
 h_16qam = @(input) qammod(input, 16, 'inputtype', 'bit');  % 16-QAM
 h_64qam = @(input) qammod(input, 64, 'inputtype', 'bit');  % 64-QAM
 
-%Anonymous functions used to demodulate the output signal with given modulation scheme  
+% Anonymous functions used to demodulate the output signal with given modulation scheme  
 g_bpsk = @(input) pskdemod(input, 2, 0, 'outputtype', 'bit');  % BPSK
 g_qpsk = @(input) pskdemod(input, 4, pi/4, 'outputtype', 'bit');  % QPSK
 g_16qam = @(input) qamdemod(input, 16, 'outputtype', 'bit');  % 16-QAM
 g_64qam = @(input) qamdemod(input, 64, 'outputtype', 'bit');  % 64-QAM
 
+
+%imshow("24_bit.png");
+
 %%%%%%%% TRANSMITTER   
 
 % Prepare image for transmission by converting it into a binary sequence
-in=imread('campus.jpg');  
+in=imread('24_bit.png');  
 N=numel(in);
 in2=reshape(in,N,1);
 bin=de2bi(in2,'left-msb');
@@ -37,6 +44,10 @@ y_qpsk = h_qpsk(input);
 y_16qam = h_16qam(input);
 y_64qam = h_64qam(input);
 
+% Plot the constellation before transmission (Ideal Constellation)
+% constellationDiagram1(y_16qam);  % Ideal constellation without noise
+%imshow
+
 %%%%%%%%%%%%%% CHANNEL 
 
 % Frequency-Domain Signals (modulated symbols) >> Time-Domain using IFFT
@@ -46,7 +57,7 @@ ifft_out_16qam=ifft(y_16qam);
 ifft_out_64qam=ifft(y_64qam);
 
 % Add AWGN to Signals
-SNR=5;          % SNR in dB
+SNR=15;          % SNR in dB
 tx_bpsk = awgn(ifft_out_bpsk,SNR,'measured');
 tx_qpsk = awgn(ifft_out_qpsk,SNR,'measured');
 tx_16qam = awgn(ifft_out_16qam,SNR,'measured');
@@ -59,6 +70,8 @@ k_bpsk=fft(tx_bpsk);
 k_qpsk=fft(tx_qpsk);
 k_16qam=fft(tx_16qam);
 k_64qam=fft(tx_64qam);
+
+constellationDiagram2(k_16qam);  % Noisy constellation
 
 % Received singal is demodulated
 l_bpsk = pskdemod(k_bpsk, 2, 0, 'outputtype', 'bit'); 
@@ -128,7 +141,3 @@ xlabel(sprintf("BER: %.2e", BER_64qam));
 
 sgtitle('Received Images');
 set(gcf, 'Position', [100, 100, 2400, 600]); % Adjust figure size to fit 4 images
-
-
-
-
