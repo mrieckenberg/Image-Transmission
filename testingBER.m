@@ -28,7 +28,7 @@ for i = 1:length(SNR_list)
     h_64qam = @(input) qammod(input, 64, 'inputtype', 'bit');  % 64-QAM
     h_256qam = @(input) qammod(input, 256, 'inputtype', 'bit');  % 256-QAM
     h_512qam = @(input) qammod(input, 512, 'inputtype', 'bit');  % 512-QAM
-    % h_1024qam = @(input) qammod(input, 1024, 'inputtype', 'bit');  % 1024-QAM
+    h_1024qam = @(input) qammod(input, 1024, 'inputtype', 'bit');  % 1024-QAM
 
     % Anonymous functions used to demodulate the output signal with given modulation scheme  
     g_bpsk = @(input) pskdemod(input, 2, 0, 'outputtype', 'bit');  % BPSK
@@ -37,7 +37,7 @@ for i = 1:length(SNR_list)
     g_64qam = @(input) qamdemod(input, 64, 'outputtype', 'bit');  % 64-QAM
     g_256qam = @(input) qamdemod(input, 256, 'outputtype', 'bit');  % 256-QAM
     g_512qam = @(input) qamdemod(input, 512, 'outputtype', 'bit');  % 512-QAM
-    % g_1024qam = @(input) qamdemod(input, 1024, 'outputtype', 'bit');  % 512-QAM
+    g_1024qam = @(input) qamdemod(input, 1024, 'outputtype', 'bit');  % 512-QAM
     
     %%%%%%%% TRANSMITTER   
     
@@ -64,7 +64,7 @@ for i = 1:length(SNR_list)
     y_64qam = h_64qam(input);
     y_256qam = h_256qam(input);
     y_512qam = h_512qam(input);
-    % y_1024qam = h_1024qam(input);
+    y_1024qam = h_1024qam(input);
    
     
     %%%%%%%%%%%%%% CHANNEL 
@@ -76,7 +76,7 @@ for i = 1:length(SNR_list)
     ifft_out_64qam=ifft(y_64qam);
     ifft_out_256qam=ifft(y_256qam);
     ifft_out_512qam=ifft(y_512qam);
-    % ifft_out_1024qam=ifft(y_1024qam);
+    ifft_out_1024qam=ifft(y_1024qam);
 
     % Add AWGN to Signals
     SNR=SNR_list(i);          % SNR in dB
@@ -86,7 +86,7 @@ for i = 1:length(SNR_list)
     tx_64qam = awgn(ifft_out_64qam,SNR,'measured');
     tx_256qam = awgn(ifft_out_256qam,SNR,'measured');
     tx_512qam = awgn(ifft_out_512qam,SNR,'measured');
-    % tx_1024qam = awgn(ifft_out_1024qam,SNR,'measured');
+    tx_1024qam = awgn(ifft_out_1024qam,SNR,'measured');
 
     %%%%%%%%%%%%    RECEIVER
     
@@ -97,7 +97,7 @@ for i = 1:length(SNR_list)
     k_64qam=fft(tx_64qam);
     k_256qam=fft(tx_256qam);
     k_512qam=fft(tx_512qam);
-    % k_1024qam=fft(tx_1024qam);
+    k_1024qam=fft(tx_1024qam);
 
     % Received singal is demodulated
     l_bpsk = pskdemod(k_bpsk, 2, 0, 'outputtype', 'bit'); 
@@ -106,7 +106,7 @@ for i = 1:length(SNR_list)
     l_64qam = qamdemod(k_64qam, 64, 'outputtype', 'bit');
     l_256qam = qamdemod(k_256qam, 256, 'outputtype', 'bit');
     l_512qam = qamdemod(k_512qam, 512, 'outputtype', 'bit');
-    % l_1024qam = qamdemod(k_512qam, 1024, 'outputtype', 'bit');
+    l_1024qam = qamdemod(k_1024qam, 1024, 'outputtype', 'bit');
 
     output_bpsk=uint8(l_bpsk);
     output_qpsk=uint8(l_qpsk);
@@ -114,7 +114,7 @@ for i = 1:length(SNR_list)
     output_64qam=uint8(l_64qam);
     output_256qam=uint8(l_256qam);
     output_512qam=uint8(l_512qam);
-    % output_1024qam=uint8(l_1024qam);
+    output_1024qam=uint8(l_1024qam);
 
     output_bpsk=output_bpsk(1:len);
     output_qpsk=output_qpsk(1:len);
@@ -122,7 +122,7 @@ for i = 1:length(SNR_list)
     output_64qam=output_64qam(1:len);
     output_256qam=output_256qam(1:len);
     output_512qam=output_512qam(1:len);
-    % output_1024qam=output_512qam(1:len);
+    output_1024qam=output_1024qam(1:len);
 
     b_bpsk = reshape(output_bpsk, 8, N)';  % Reshape BPSK output into 8-bit blocks
     b1=reshape(output_qpsk,8,N)';
@@ -130,7 +130,7 @@ for i = 1:length(SNR_list)
     b3=reshape(output_64qam,8,N)';
     b4=reshape(output_256qam,8,N)';
     b5=reshape(output_512qam,8,N)';
-    % b6=reshape(output_1024qam,8,N);
+    b6=reshape(output_1024qam,8,N)';
 
     dec_bpsk = bi2de(b_bpsk,'left-msb');
     dec_qpsk = bi2de(b1,'left-msb');
@@ -138,7 +138,7 @@ for i = 1:length(SNR_list)
     dec_64qam = bi2de(b3,'left-msb');
     dec_256qam = bi2de(b4,'left-msb');
     dec_512qam = bi2de(b5,'left-msb');
-    % dec_1024qam = bi2de(b6,'left-msb');
+    dec_1024qam = bi2de(b6,'left-msb');
 
     % Compute the bit error rate
     BER_bpsk = biterr(input, l_bpsk) / len;
@@ -147,13 +147,13 @@ for i = 1:length(SNR_list)
     BER_64qam = biterr(input, l_64qam) / len;
     BER_256qam = biterr(input, l_256qam) / len;
     BER_512qam = biterr(input, l_512qam) / len;
-    % BER_1024qam = biterr(input, l_1024qam) / len;
+    BER_1024qam = biterr(input, l_1024qam) / len;
 
     % Save the BER to text log files for each modulation scheme
-    % disp(BER_1024qam);
-    % fileID = fopen('1024-QAM_BER.txt', 'a'); % Open file for writing
-    % fprintf(fileID, '%.8f\n', BER_1024qam); % Write variable with formatting
-    % fclose(fileID); % Close the file
+    disp(BER_1024qam);
+    fileID = fopen('1024-QAM_BER.txt', 'a'); % Open file for writing
+    fprintf(fileID, '%.8f\n', BER_1024qam); % Write variable with formatting
+    fclose(fileID); % Close the file
 
     disp(BER_512qam);
     fileID = fopen('512-QAM_BER.txt', 'a'); % Open file for writing
