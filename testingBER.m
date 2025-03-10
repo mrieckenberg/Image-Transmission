@@ -3,22 +3,22 @@ close all;
 
 
 % Clear all text file logs
-fileID = fopen('1024-QAM_BER.txt', 'w'); % Open file for writing
+fileID = fopen('logs/1024-QAM_BER.txt', 'w'); % Open file for writing
 fclose(fileID); % Close the file
-fileID = fopen('512-QAM_BER.txt', 'w'); % Open file for writing
+fileID = fopen('logs/512-QAM_BER.txt', 'w'); % Open file for writing
 fclose(fileID); % Close the file
-fileID = fopen('256-QAM_BER.txt', 'w'); % Open file for writing
+fileID = fopen('logs/256-QAM_BER.txt', 'w'); % Open file for writing
 fclose(fileID); % Close the file
-fileID = fopen('64-QAM_BER.txt', 'w'); % Open file for writing
+fileID = fopen('logs/64-QAM_BER.txt', 'w'); % Open file for writing
 fclose(fileID); % Close the file
-fileID = fopen('16-QAM_BER.txt', 'w'); % Open file for writing
+fileID = fopen('logs/16-QAM_BER.txt', 'w'); % Open file for writing
 fclose(fileID); % Close the file
-fileID = fopen('QPSK_BER.txt', 'w'); % Open file for writing
+fileID = fopen('logs/QPSK_BER.txt', 'w'); % Open file for writing
 fclose(fileID); % Close the file
-fileID = fopen('BPSK_BER.txt', 'w'); % Open file for writing
+fileID = fopen('logs/BPSK_BER.txt', 'w'); % Open file for writing
 fclose(fileID); % Close the file
 
-SNR_list = [-30:30];
+SNR_list = [-40:40];
 for i = 1:length(SNR_list)
 
     % Anonymous functions used to modulate the input signal with given modulation scheme  
@@ -151,38 +151,38 @@ for i = 1:length(SNR_list)
 
     % Save the BER to text log files for each modulation scheme
     disp(BER_1024qam);
-    fileID = fopen('1024-QAM_BER.txt', 'a'); % Open file for writing
+    fileID = fopen('logs/1024-QAM_BER.txt', 'a'); % Open file for writing
     fprintf(fileID, '%.8f\n', BER_1024qam); % Write variable with formatting
     fclose(fileID); % Close the file
 
     disp(BER_512qam);
-    fileID = fopen('512-QAM_BER.txt', 'a'); % Open file for writing
+    fileID = fopen('logs/512-QAM_BER.txt', 'a'); % Open file for writing
     fprintf(fileID, '%.8f\n', BER_512qam); % Write variable with formatting
     fclose(fileID); % Close the file
 
     % Save the BER to text log files for each modulation scheme
     disp(BER_256qam);
-    fileID = fopen('256-QAM_BER.txt', 'a'); % Open file for writing
+    fileID = fopen('logs/256-QAM_BER.txt', 'a'); % Open file for writing
     fprintf(fileID, '%.8f\n', BER_256qam); % Write variable with formatting
     fclose(fileID); % Close the file
 
     disp(BER_64qam);
-    fileID = fopen('64-QAM_BER.txt', 'a'); % Open file for writing
+    fileID = fopen('logs/64-QAM_BER.txt', 'a'); % Open file for writing
     fprintf(fileID, '%.8f\n', BER_64qam); % Write variable with formatting
     fclose(fileID); % Close the file
 
     disp(BER_16qam);
-    fileID = fopen('16-QAM_BER.txt', 'a'); % Open file for writing
+    fileID = fopen('logs/16-QAM_BER.txt', 'a'); % Open file for writing
     fprintf(fileID, '%.8f\n', BER_16qam); % Write variable with formatting
     fclose(fileID); % Close the file
 
     disp(BER_bpsk);
-    fileID = fopen('QPSK_BER.txt', 'a'); % Open file for writing
+    fileID = fopen('logs/QPSK_BER.txt', 'a'); % Open file for writing
     fprintf(fileID, '%.8f\n', BER_bpsk); % Write variable with formatting
     fclose(fileID); % Close the file
 
     disp(BER_qpsk);
-    fileID = fopen('BPSK_BER.txt', 'a'); % Open file for writing
+    fileID = fopen('logs/BPSK_BER.txt', 'a'); % Open file for writing
     fprintf(fileID, '%.8f\n', BER_qpsk); % Write variable with formatting
     fclose(fileID); % Close the file
     
