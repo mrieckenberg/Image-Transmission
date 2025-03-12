@@ -14,7 +14,8 @@ h_64qam = @(input) qammod(input, 64, 'inputtype', 'bit');  % 64-QAM
 h_256qam = @(input) qammod(input, 256, 'inputtype', 'bit');  % 256-QAM
 h_512qam = @(input) qammod(input, 512, 'inputtype', 'bit');  % 512-QAM
 h_1024qam = @(input) qammod(input, 1024, 'inputtype', 'bit');  % 1024-QAM
-h_mil188qam = @(input) mil188qammod(input,32,'inputtype','bit'); % 32-Mil188-QAM
+h_mil188qam = @(input) mil188qammod(input,16,'inputtype','bit'); % Mil188-32-QAM
+
 
 % Anonymous functions used to demodulate the output signal with given modulation scheme  
 g_bpsk = @(input) pskdemod(input, 2, 0, 'outputtype', 'bit');  % BPSK
@@ -24,7 +25,7 @@ g_64qam = @(input) qamdemod(input, 64, 'outputtype', 'bit');  % 64-QAM
 g_256qam = @(input) qamdemod(input, 256, 'outputtype', 'bit');  % 256-QAM
 g_512qam = @(input) qamdemod(input, 512, 'outputtype', 'bit');  % 512-QAM
 g_1024qam = @(input) qamdemod(input, 1024, 'outputtype', 'bit');  % 1024-QAM
-g_mil188qam = @(input) mil188qammod(input,32,'inputtype','bit');  % 32-Mil188-QAM
+g_mil188qam = @(input) mil188qammod(input,16,'inputtype','bit');  % 32-Mil188-QAM
 
 
 %%%%%%%% TRANSMITTER   
@@ -53,6 +54,7 @@ y_256qam = h_256qam(input);
 y_512qam = h_512qam(input);
 y_1024qam = h_1024qam(input);
 y_mil188qam = h_mil188qam(input);
+
 % Plot the constellation before transmission (Ideal Constellation)
 % constellationDiagram1(y_16qam);  % Ideal constellation without noise
 % imshow
@@ -68,6 +70,7 @@ ifft_out_256qam=ifft(y_256qam);
 ifft_out_512qam=ifft(y_512qam);
 ifft_out_1024qam=ifft(y_1024qam);
 ifft_out_mil188qam=ifft(y_mil188qam);
+% ifft_out_apsk=ifft(y_apsk);
 
 % Add AWGN to Signals
 SNR=15;          % SNR in dB
@@ -79,6 +82,7 @@ tx_256qam = awgn(ifft_out_256qam,SNR,'measured');
 tx_512qam = awgn(ifft_out_512qam,SNR,'measured');
 tx_1024qam = awgn(ifft_out_1024qam,SNR,'measured');
 tx_mil188qam = awgn(ifft_out_mil188qam,SNR,'measured');
+
 
 %%%%%%%%%%%%    RECEIVER
 
@@ -102,7 +106,7 @@ l_64qam = qamdemod(k_64qam, 64, 'outputtype', 'bit');
 l_256qam = qamdemod(k_256qam, 256, 'outputtype', 'bit');
 l_512qam = qamdemod(k_512qam, 512, 'outputtype', 'bit');
 l_1024qam = qamdemod(k_1024qam, 1024, 'outputtype', 'bit');
-l_mil188qam = qamdemod(k_mil188qam, 32, 'outputtype', 'bit');
+l_mil188qam = qamdemod(k_mil188qam, 16, 'outputtype', 'bit');
 
 output_bpsk=uint8(l_bpsk);
 output_qpsk=uint8(l_qpsk);
@@ -198,19 +202,21 @@ title('256-QAM');
 xlabel(sprintf("BER: %.2e", BER_256qam));
 
 subplot(2,4,6);
-imshow(im_256qam);
+imshow(im_512qam);
 title('512-QAM');
 xlabel(sprintf("BER: %.2e", BER_512qam));
 
 subplot(2,4,7);
-imshow(im_256qam);
+imshow(im_1024qam);
 title('1024-QAM');
 xlabel(sprintf("BER: %.2e", BER_1024qam));
 
 subplot(2,4,8);
-imshow(im_256qam);
+imshow(im_mil188qam);
 title('MIL188-QAM');
 xlabel(sprintf("BER: %.2e", BER_mil188qam));
 
-sgtitle('Received Images');
+temp = "Received Images at SNR="+num2str(SNR)+"dB";
+% disp(temp);
+sgtitle(temp);
 set(gcf, 'Position', [100, 100, 2400, 600]); % Adjust figure size to fit 4 images

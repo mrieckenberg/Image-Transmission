@@ -31,7 +31,7 @@ for i = 1:length(SNR_list)
     h_256qam = @(input) qammod(input, 256, 'inputtype', 'bit');  % 256-QAM
     h_512qam = @(input) qammod(input, 512, 'inputtype', 'bit');  % 512-QAM
     h_1024qam = @(input) qammod(input, 1024, 'inputtype', 'bit');  % 1024-QAM
-    h_mil188qam = @(input) mil188qammod(input,32,'inputtype','bit'); % 32-Mil188-QAM
+    h_mil188qam = @(input) mil188qammod(input,32,'inputtype','bit'); % Mil188-32-QAM
 
     % Anonymous functions used to demodulate the output signal with given modulation scheme  
     g_bpsk = @(input) pskdemod(input, 2, 0, 'outputtype', 'bit');  % BPSK
@@ -41,7 +41,7 @@ for i = 1:length(SNR_list)
     g_256qam = @(input) qamdemod(input, 256, 'outputtype', 'bit');  % 256-QAM
     g_512qam = @(input) qamdemod(input, 512, 'outputtype', 'bit');  % 512-QAM
     g_1024qam = @(input) qamdemod(input, 1024, 'outputtype', 'bit');  % 512-QAM
-    g_mil188qam = @(input) mil188qammod(input,32,'inputtype','bit');  % 32-Mil188-QAM
+    g_mil188qam = @(input) mil188qammod(input,32,'inputtype','bit');  % Mil188-32-QAM
 
 
     %%%%%%%% TRANSMITTER   
@@ -204,7 +204,7 @@ for i = 1:length(SNR_list)
 
     disp(BER_mil188qam);
     fileID = fopen('logs/MILL188-32-QAM_BER.txt', 'a'); % Open file for writing
-    fprintf(fileID, '%.8f\n', BER_qpsk); % Write variable with formatting
+    fprintf(fileID, '%.8f\n', BER_mil188qam); % Write variable with formatting
     fclose(fileID); % Close the file
 
     
