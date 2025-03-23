@@ -11,6 +11,7 @@ h_bpsk = @(input) pskmod(input, 2, 0, 'inputtype', 'bit');  % BPSK
 h_qpsk = @(input) pskmod(input, 4, pi/4, 'inputtype', 'bit');  % QPSK
 h_16qam = @(input) qammod(input, 16, 'inputtype', 'bit');  % 16-QAM
 h_64qam = @(input) qammod(input, 64, 'inputtype', 'bit');  % 64-QAM
+
 h_256qam = @(input) qammod(input, 256, 'inputtype', 'bit');  % 256-QAM
 h_512qam = @(input) qammod(input, 512, 'inputtype', 'bit');  % 512-QAM
 h_1024qam = @(input) qammod(input, 1024, 'inputtype', 'bit');  % 1024-QAM
