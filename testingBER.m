@@ -46,9 +46,9 @@ for i = 1:length(SNR_list)
 
     %%%%%%%% TRANSMITTER   
     
-    % Prepare image for transmission by converting it into a binary sequence
-    % in=imread('campus.jpg');  
-    in=imread('leaf.png');  
+    % Prepare image for transmission by converting it into a binary sequence 
+    % in=imread('leaf.png');  
+    in=imread('cat.jpg');
     N=numel(in);
     in2=reshape(in,N,1);
     bin=de2bi(in2,'left-msb');

@@ -11,7 +11,6 @@ h_bpsk = @(input) pskmod(input, 2, 0, 'inputtype', 'bit');  % BPSK
 h_qpsk = @(input) pskmod(input, 4, pi/4, 'inputtype', 'bit');  % QPSK
 h_16qam = @(input) qammod(input, 16, 'inputtype', 'bit');  % 16-QAM
 h_64qam = @(input) qammod(input, 64, 'inputtype', 'bit');  % 64-QAM
-
 h_256qam = @(input) qammod(input, 256, 'inputtype', 'bit');  % 256-QAM
 h_512qam = @(input) qammod(input, 512, 'inputtype', 'bit');  % 512-QAM
 h_1024qam = @(input) qammod(input, 1024, 'inputtype', 'bit');  % 1024-QAM
@@ -32,7 +31,8 @@ g_mil188qam = @(input) mil188qammod(input,16,'inputtype','bit');  % 32-Mil188-QA
 %%%%%%%% TRANSMITTER   
 
 % Prepare image for transmission by converting it into a binary sequence
-in=imread('leaf.png');  
+% in=imread('cat.png');  
+in=imread('cat.jpg'); 
 N=numel(in);
 in2=reshape(in,N,1);
 bin=de2bi(in2,'left-msb');
@@ -217,7 +217,7 @@ imshow(im_mil188qam);
 title('MIL188-QAM');
 xlabel(sprintf("BER: %.2e", BER_mil188qam));
 
-temp = "Received Images at SNR="+num2str(SNR)+"dB";
+temp = "Received Images after AWGN with SNR="+num2str(SNR)+"dB";
 % disp(temp);
 sgtitle(temp);
 set(gcf, 'Position', [100, 100, 2400, 600]); % Adjust figure size to fit 4 images
