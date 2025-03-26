@@ -31,8 +31,8 @@ g_mil188qam = @(input) mil188qammod(input,16,'inputtype','bit');  % 32-Mil188-QA
 %%%%%%%% TRANSMITTER   
 
 % Prepare image for transmission by converting it into a binary sequence
-% in=imread('cat.png');  
-in=imread('cat.jpg'); 
+in=imread('leaf.png');  
+% in=imread('cat.jpg'); 
 N=numel(in);
 in2=reshape(in,N,1);
 bin=de2bi(in2,'left-msb');
